@@ -148,6 +148,70 @@ body {
     drop-shadow(0 0 5px var(--terminal-green-glow));
 }
 
+/* Personal Links Popover Styles */
+.personal-popover {
+  position: absolute;
+  bottom: 135%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--terminal-dark);
+  border: 1px solid var(--terminal-border);
+  border-radius: 6px;
+  padding: 0;
+  max-width: 280px;
+  text-align: center;
+  z-index: 1000;
+  box-shadow: 0 4px 15px rgba(0, 255, 0, 0.2);
+  opacity: 0;
+  transform: translateX(-50%) translateY(10px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.personal-popover.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.personal-popover::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid var(--terminal-border);
+}
+
+.personal-popover::after {
+  content: "";
+  position: absolute;
+  top: calc(100% - 1px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid rgba(10, 17, 10, 1);
+}
+
+.personal-popover .popover-content {
+  font-size: 0.85rem;
+  padding: 0.8rem 1.2rem;
+  margin: 0;
+  line-height: 1.4;
+  box-shadow: inset 0 0 8px rgba(0, 255, 0, 0.1);
+}
+
+.personal-section .social-link {
+  position: relative;
+}
+
 /* About Me */
 .about-me {
   margin-bottom: 4rem;

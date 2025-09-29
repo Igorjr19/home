@@ -72,6 +72,77 @@ function typeText(element, text, speed = 50, callback = null) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  const personalLinks = document.querySelectorAll(
+    ".personal-section .social-link"
+  );
+  let globalClickCount = 0;
+
+  personalLinks.forEach((link, index) => {
+    const originalHref = link.getAttribute("href");
+
+    link.removeAttribute("href");
+    link.style.cursor = "pointer";
+    link.dataset.originalHref = originalHref;
+
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      globalClickCount++;
+
+      if (globalClickCount === 1) {
+        showPopover(link, "Hey! That's personal stuff...");
+      } else if (globalClickCount === 2) {
+        showPopover(link, "I'm serious!");
+      } else {
+        const href = link.dataset.originalHref;
+        if (href) {
+          window.open(href, "_blank");
+        }
+      }
+    });
+  });
+
+  function showPopover(link, message) {
+    closePopover();
+
+    const popover = document.createElement("div");
+    popover.className = "personal-popover";
+    popover.innerHTML = `
+      <div class="popover-content">
+        ${message}
+      </div>
+    `;
+
+    link.appendChild(popover);
+
+    setTimeout(() => {
+      popover.classList.add("show");
+    }, 10);
+
+    setTimeout(() => {
+      closePopover();
+    }, 3000);
+  }
+
+  function closePopover() {
+    const popover = document.querySelector(".personal-popover");
+    if (popover) {
+      popover.classList.remove("show");
+      setTimeout(() => {
+        if (popover.parentNode) {
+          popover.parentNode.removeChild(popover);
+        }
+      }, 300);
+    }
+  }
+
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".personal-section")) {
+      closePopover();
+    }
+  });
+
   const interactiveElements = document.querySelectorAll(
     ".social-link, .project-link, .tech-item"
   );
