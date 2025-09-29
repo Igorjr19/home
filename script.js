@@ -95,9 +95,12 @@ document.addEventListener("DOMContentLoaded", function () {
       } else if (globalClickCount === 2) {
         showPopover(link, "I'm serious!");
       } else {
+        closePopover();
         const href = link.dataset.originalHref;
         if (href) {
-          window.open(href, "_blank");
+          setTimeout(() => {
+            window.open(href, "_blank");
+          }, 10);
         }
       }
     });
@@ -116,25 +119,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
     link.appendChild(popover);
 
-    setTimeout(() => {
+    // Store timeout reference for cleanup
+    popover.showTimeout = setTimeout(() => {
       popover.classList.add("show");
     }, 10);
 
-    setTimeout(() => {
+    popover.hideTimeout = setTimeout(() => {
       closePopover();
     }, 3000);
   }
 
   function closePopover() {
-    const popover = document.querySelector(".personal-popover");
-    if (popover) {
-      popover.classList.remove("show");
-      setTimeout(() => {
-        if (popover.parentNode) {
-          popover.parentNode.removeChild(popover);
-        }
-      }, 300);
-    }
+    const popovers = document.querySelectorAll(".personal-popover");
+    popovers.forEach(popover => {
+      if (popover) {
+        // Clear any existing timeouts to prevent race conditions
+        clearTimeout(popover.showTimeout);
+        clearTimeout(popover.hideTimeout);
+        clearTimeout(popover.removeTimeout);
+        
+        popover.classList.remove("show");
+        
+        popover.removeTimeout = setTimeout(() => {
+          if (popover.parentNode) {
+            popover.parentNode.removeChild(popover);
+          }
+        }, 300);
+      }
+    });
   }
 
   document.addEventListener("click", function (e) {
